@@ -15,12 +15,12 @@ func (s *service) listCats(ctx context.Context, _ interface{}) (interface{}, err
 	cats, err := s.db.GetCats(ctx)
 	if err != nil {
 		log.Errorf(ctx, "unable to increment counter: %s", err)
-		return nil, marvin.NewJSONStatusResponse(map[string]string{
-			"error": "unable to increment counter"}, http.StatusInternalServerError)
+		return nil, marvin.NewProtoStatusResponse(&ErrorResponse{
+			Error: "unable to increment counter"}, http.StatusInternalServerError)
 	}
 
 	return &CatsResponse{
-		Total: len(cats),
+		Total: int32(len(cats)),
 		Cats:  cats,
 	}, nil
 }

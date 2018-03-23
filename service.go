@@ -3,6 +3,7 @@ package cats
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/NYTimes/marvin"
 	"github.com/go-kit/kit/endpoint"
@@ -42,7 +43,17 @@ func (s *service) Middleware(ep endpoint.Endpoint) endpoint.Endpoint {
 }
 
 func (s *service) Options() []httptransport.ServerOption {
-	return nil
+	return []httptransport.ServerOption{
+		httptransport.ServerErrorEncoder(func(ctx context.Context, err error, w http.ResponseWriter) {
+			// check proto/json by inspecting url
+			path := ctx.Value(httptransport.ContextKeyRequestPath).(string)
+			if strings.HasSuffix(path, ".json") {
+				httptransport.EncodeJSONResponse(ctx, w, err)
+				return
+			}
+			marvin.EncodeProtoResponse(ctx, w, err)
+		}),
+	}
 }
 
 func (s *service) RouterOptions() []marvin.RouterOption {
@@ -52,15 +63,31 @@ func (s *service) RouterOptions() []marvin.RouterOption {
 
 func (s *service) JSONEndpoints() map[string]map[string]marvin.HTTPEndpoint {
 	return map[string]map[string]marvin.HTTPEndpoint{
-		"/list": {
+		"/list.json": {
 			"GET": {
 				Endpoint: s.listCats,
 			},
 		},
-		"/add": {
+		"/add.json": {
 			"POST": {
 				Endpoint: s.addCat,
 				Decoder:  decodeCat,
+			},
+		},
+	}
+}
+
+func (s *service) ProtoEndpoints() map[string]map[string]marvin.HTTPEndpoint {
+	return map[string]map[string]marvin.HTTPEndpoint{
+		"/list.proto": {
+			"GET": {
+				Endpoint: s.listCats,
+			},
+		},
+		"/add.proto": {
+			"POST": {
+				Endpoint: s.addCat,
+				Decoder:  decodeCatProto,
 			},
 		},
 	}

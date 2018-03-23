@@ -31,7 +31,11 @@
 
 [[constraint]]
   name = "github.com/go-kit/kit"
-  version = "0.6.0"
+  version = "0.7.0"
+
+[[constraint]]
+  name = "github.com/golang/protobuf"
+  version = "1.0.0"
 
 [[constraint]]
   name = "github.com/pkg/errors"
@@ -42,6 +46,5 @@
   version = "1.0.0"
 
 [prune]
-  non-go = true
   go-tests = true
   unused-packages = true

@@ -1,0 +1,93 @@
+swagger: '2.0'
+info:
+  title: Cats
+  description: Storing and serving cat objects.
+  version: "0.0.0"
+schemes:
+  - https
+produces:
+  - application/x-protobuf
+  - application/json
+consumes:
+  - application/x-protobuf
+  - application/json  
+paths:
+  /list.{format}:
+    get:
+      description: List all available cats.
+      parameters:
+        - name: format 
+          in: path
+          type: string
+          description: '"json" or "proto" are acceptable.'
+      responses:
+        200:
+          description: All the cats!
+          schema:
+            $ref: '#/definitions/CatsResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /add.{format}:
+    post:
+      description: Add a new cat.
+      parameters:
+        - name: format
+          in: header
+          type: string
+          description: '"json" or "proto" are acceptable.'
+        - name: cat
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Cat'
+      responses:
+        201:
+          description: The saved Cat with it's new ID.
+          schema:
+            $ref: '#/definitions/Cat'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  Cat:
+    type: object
+    properties:
+      key:
+        type: integer
+        format: int64
+        x-proto-tag: 1
+      name:
+        type: string
+        x-proto-tag: 2
+      breed:
+        type: string
+        x-proto-tag: 3
+      weight:
+        type: number
+        format: double
+        x-proto-tag: 4
+
+  CatsResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int32
+        x-proto-tag: 1
+      cats:
+        type: array
+        items:
+          $ref: '#/definitions/Cat'
+        x-proto-tag: 2
+
+  ErrorResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        x-proto-tag: 1

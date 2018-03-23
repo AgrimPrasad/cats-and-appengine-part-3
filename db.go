@@ -14,18 +14,6 @@ type (
 		AddCat(context.Context, *Cat) error
 	}
 
-	Cat struct {
-		Key    int64   `json:"key"`
-		Name   string  `json:"name"`
-		Breed  string  `json:"breed"`
-		Weight float64 `json:"weight"`
-	}
-
-	CatsResponse struct {
-		Total int    `json:"total"`
-		Cats  []*Cat `json:"cats"`
-	}
-
 	db struct{}
 )
 

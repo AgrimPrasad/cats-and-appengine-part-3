@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/NYTimes/marvin"
-	cats "github.com/jprobinson/cats-and-appengine-part-2"
+	cats "github.com/jprobinson/cats-and-appengine-part-3"
 
 	"google.golang.org/appengine"
 )

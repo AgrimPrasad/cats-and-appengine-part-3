@@ -4,8 +4,8 @@
 [[projects]]
   name = "cloud.google.com/go"
   packages = ["compute/metadata"]
-  revision = "20d4028b8a750c2aca76bf9fefa8ed2d0109b573"
-  version = "v0.19.0"
+  revision = "4b98a6370e36d7a85192e7bad08a4ebd82eac2a8"
+  version = "v0.20.0"
 
 [[projects]]
   name = "github.com/NYTimes/marvin"
@@ -23,8 +23,8 @@
     "log",
     "transport/http"
   ]
-  revision = "4dc7be5d2d12881735283bcab7352178e190fc71"
-  version = "v0.6.0"
+  revision = "ca4112baa34cb55091301bdc13b1420a122b1b9e"
+  version = "v0.7.0"
 
 [[projects]]
   name = "github.com/go-logfmt/logfmt"
@@ -81,7 +81,7 @@
     "context",
     "context/ctxhttp"
   ]
-  revision = "d0aafc73d5cdc42264b0af071c261abac580695e"
+  revision = "6078986fec03a1dcc236c34816c71b0e05018fda"
 
 [[projects]]
   branch = "master"
@@ -93,7 +93,7 @@
     "jws",
     "jwt"
   ]
-  revision = "2f32c3ac0fa4fb807a0fcefb0b6f2468a0d99bd0"
+  revision = "fdc9e635145ae97e6c2cb777c48305600cf515cb"
 
 [[projects]]
   branch = "master"
@@ -104,7 +104,7 @@
     "googleapi",
     "googleapi/internal/uritemplates"
   ]
-  revision = "7f657476956314fee258816aaf81c0ff65cf8bee"
+  revision = "24928b980e6919be4c72647aacd53ebcbb8c4bab"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -131,6 +131,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0cd2eb292d63a1740467bc92a1896c0d04b59d968497909367caa270c6cc7d6f"
+  inputs-digest = "e6a88e48285b51e607e6ad8a579b2b471e591a755815d09602ff1c420a4b021d"
   solver-name = "gps-cdcl"
   solver-version = 1

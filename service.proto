@@ -3,9 +3,10 @@ syntax = "proto3";
 package cats;
 
 message PostAddFormatRequest {
-    Cat cat = 1;
+    Cat cat = 2;
+
     // "json" or "proto" are acceptable.
-    string format = 2;
+    string format = 1;
 }
 
 message GetListFormatRequest {
@@ -32,6 +33,7 @@ message ErrorResponse {
 service CatsService {
     // Add a new cat.
     rpc PostAddFormat(PostAddFormatRequest) returns (Cat) {}
+
     // List all available cats.
     rpc GetListFormat(GetListFormatRequest) returns (CatsResponse) {}
 }

@@ -10,16 +10,18 @@ produces:
   - application/json
 consumes:
   - application/x-protobuf
-  - application/json  
+  - application/json
 paths:
   /list.{format}:
     get:
       description: List all available cats.
       parameters:
-        - name: format 
+        - name: format
+          required: true
           in: path
           type: string
           description: '"json" or "proto" are acceptable.'
+          x-proto-tag: 1
       responses:
         200:
           description: All the cats!
@@ -35,14 +37,17 @@ paths:
       description: Add a new cat.
       parameters:
         - name: format
-          in: header
+          required: true
+          in: path
           type: string
           description: '"json" or "proto" are acceptable.'
+          x-proto-tag: 1
         - name: cat
           in: body
           required: true
           schema:
             $ref: '#/definitions/Cat'
+          x-proto-tag: 2
       responses:
         201:
           description: The saved Cat with it's new ID.

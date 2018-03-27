@@ -44,8 +44,10 @@ func (s *service) Middleware(ep endpoint.Endpoint) endpoint.Endpoint {
 
 func (s *service) Options() []httptransport.ServerOption {
 	return []httptransport.ServerOption{
+		// add a custom error encoder to inspect the request path to determine the proper
+		// serialization format
 		httptransport.ServerErrorEncoder(func(ctx context.Context, err error, w http.ResponseWriter) {
-			// check proto/json by inspecting url
+			// use context key injected by go-kit/marvin to retrieve the current path
 			path := ctx.Value(httptransport.ContextKeyRequestPath).(string)
 			if strings.HasSuffix(path, ".json") {
 				httptransport.EncodeJSONResponse(ctx, w, err)

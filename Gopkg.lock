@@ -11,7 +11,8 @@
   name = "github.com/NYTimes/marvin"
   packages = [
     ".",
-    "internal"
+    "internal",
+    "marvintest"
   ]
   revision = "20b9358a0d961c1a08599324f96c2aec4fc12f23"
   version = "v0.2.0"
@@ -69,6 +70,18 @@
   revision = "b84e30acd515aadc4b783ad4ff83aff3299bdfe0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/kr/pretty"
+  packages = ["."]
+  revision = "cfb55aafdaf3ec08f0db22699ab822c50091b1c4"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kr/text"
+  packages = ["."]
+  revision = "7cafcd837844e784b526369c9bce262804aebc60"
+
+[[projects]]
   name = "github.com/pkg/errors"
   packages = ["."]
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
@@ -104,12 +117,13 @@
     "googleapi",
     "googleapi/internal/uritemplates"
   ]
-  revision = "24928b980e6919be4c72647aacd53ebcbb8c4bab"
+  revision = "e4126357c891acdef6dcd7805daa4c6533be6544"
 
 [[projects]]
   name = "google.golang.org/appengine"
   packages = [
     ".",
+    "aetest",
     "datastore",
     "internal",
     "internal/app_identity",
@@ -131,6 +145,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e6a88e48285b51e607e6ad8a579b2b471e591a755815d09602ff1c420a4b021d"
+  inputs-digest = "09ce24930a7c1b9d0bd9a21563416091df9c52910a19c5bf44d9cc70c7d2a33f"
   solver-name = "gps-cdcl"
   solver-version = 1

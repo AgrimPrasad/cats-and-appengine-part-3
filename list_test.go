@@ -14,7 +14,6 @@ import (
 	"google.golang.org/appengine/user"
 
 	"github.com/NYTimes/marvin"
-	"github.com/NYTimes/marvin/marvintest"
 	"github.com/golang/protobuf/proto"
 	"github.com/kr/pretty"
 )
@@ -50,8 +49,11 @@ func TestListCats(t *testing.T) {
 	}
 
 	// we need to init the App Engine server to deal with any logs/GAE interaction
-	done := marvintest.SetupTestContext(t)
-	defer done()
+	inst, err := aetest.NewInstance(nil)
+	if err != nil {
+		t.Fatal("unable to start GAE instance: ", err)
+	}
+	defer inst.Close()
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -59,10 +61,12 @@ func TestListCats(t *testing.T) {
 			// init server with our injected DB impl
 			svr := marvin.NewServer(&service{db: test.givenDB})
 
-			// setup the request and response capture
-			//			r := httptest.NewRequest(http.MethodGet, "/list."+test.givenFormat, nil)
-			r, _ := http.NewRequest(http.MethodGet, "/list."+test.givenFormat, &bytes.Buffer{})
-			marvintest.SetServerContext(ctx)
+			// use our aetest instance to create our test request so it has proper
+			// context attached
+			r, err := inst.NewRequest(http.MethodGet, "/list."+test.givenFormat, &bytes.Buffer{})
+			if err != nil {
+				t.Fatal("unable to create GAE requeest: ", err)
+			}
 			// make it look like someone is logged in
 			aetest.Login(&user.User{
 				Email:             "jp@nytimes.com",

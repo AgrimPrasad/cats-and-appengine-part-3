@@ -14,9 +14,9 @@ func (s *service) listCats(ctx context.Context, _ interface{}) (interface{}, err
 	// get cats from injected DB
 	cats, err := s.db.GetCats(ctx)
 	if err != nil {
-		log.Errorf(ctx, "unable to increment counter: %s", err)
+		log.Errorf(ctx, "unable to get cat list: %s", err)
 		return nil, marvin.NewProtoStatusResponse(&ErrorResponse{
-			Error: "unable to increment counter"}, http.StatusInternalServerError)
+			Error: "unable to get cat list"}, http.StatusInternalServerError)
 	}
 
 	return &CatsResponse{

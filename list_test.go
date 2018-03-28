@@ -3,19 +3,15 @@ package cats
 import (
 	"bytes"
 	"context"
-	"encoding/json"
-	"io/ioutil"
+	"errors"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
 	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine/user"
 
 	"github.com/NYTimes/marvin"
-	"github.com/golang/protobuf/proto"
-	"github.com/kr/pretty"
 )
 
 func TestListCats(t *testing.T) {
@@ -44,16 +40,50 @@ func TestListCats(t *testing.T) {
 				Total: 2,
 				Cats:  testCatSlice,
 			},
-			wantError: nil,
+		},
+		{
+			name: "Protobuf Success",
+
+			givenFormat: "proto",
+			givenDB: &testDB{
+				MockGetCats: func(_ context.Context) ([]*Cat, error) {
+					return testCatSlice, nil
+				},
+			},
+
+			wantCode: http.StatusOK,
+			wantResponse: &CatsResponse{
+				Total: 2,
+				Cats:  testCatSlice,
+			},
+		},
+		{
+			name: "JSON Error",
+
+			givenFormat: "json",
+			givenDB: &testDB{
+				MockGetCats: func(_ context.Context) ([]*Cat, error) {
+					return nil, errors.New("aw shucks")
+				},
+			},
+
+			wantCode:  http.StatusInternalServerError,
+			wantError: &ErrorResponse{Error: "unable to get cat list"},
+		},
+		{
+			name: "Protobuf Error",
+
+			givenFormat: "proto",
+			givenDB: &testDB{
+				MockGetCats: func(_ context.Context) ([]*Cat, error) {
+					return nil, errors.New("aw shucks")
+				},
+			},
+
+			wantCode:  http.StatusInternalServerError,
+			wantError: &ErrorResponse{Error: "unable to get cat list"},
 		},
 	}
-
-	// we need to init the App Engine server to deal with any logs/GAE interaction
-	inst, err := aetest.NewInstance(nil)
-	if err != nil {
-		t.Fatal("unable to start GAE instance: ", err)
-	}
-	defer inst.Close()
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -63,7 +93,7 @@ func TestListCats(t *testing.T) {
 
 			// use our aetest instance to create our test request so it has proper
 			// context attached
-			r, err := inst.NewRequest(http.MethodGet, "/list."+test.givenFormat, &bytes.Buffer{})
+			r, err := testInst.NewRequest(http.MethodGet, "/list."+test.givenFormat, &bytes.Buffer{})
 			if err != nil {
 				t.Fatal("unable to create GAE requeest: ", err)
 			}
@@ -77,12 +107,13 @@ func TestListCats(t *testing.T) {
 			svr.ServeHTTP(w, r)
 			got := w.Result()
 
-			// check resp code
+			// check the response code
 			if got.StatusCode != test.wantCode {
 				t.Errorf("expected response code of %d, got %d",
 					test.wantCode, got.StatusCode)
 			}
 
+			// check the response body
 			var gotRes CatsResponse
 			var gotErr ErrorResponse
 			switch test.givenFormat {
@@ -104,45 +135,5 @@ func TestListCats(t *testing.T) {
 				}
 			}
 		})
-	}
-}
-
-var (
-	testCat1     = &Cat{Name: "Gus", Breed: "Tabby", Weight: 8.5}
-	testCat2     = &Cat{Name: "Ziggy", Breed: "Fat", Weight: 14.5}
-	testCatSlice = []*Cat{testCat1, testCat2}
-)
-
-func readJSON(t *testing.T, res *http.Response, val interface{}) {
-	err := json.NewDecoder(res.Body).Decode(val)
-	if err != nil {
-		t.Errorf("unable to parse response: %s", err)
-	}
-	defer res.Body.Close()
-}
-
-func readProto(t *testing.T, res *http.Response, val proto.Message) {
-	b, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Errorf("unable to read response: %s", err)
-		return
-	}
-	defer res.Body.Close()
-
-	err = proto.Unmarshal(b, val)
-	if err != nil {
-		t.Errorf("unable to proto unmarshal response: %s", err)
-		return
-	}
-}
-
-func compareResults(t *testing.T, got, want interface{}) {
-	if reflect.DeepEqual(got, want) {
-		return
-	}
-	diffs := pretty.Diff(got, want)
-	t.Errorf("found %d difference(s) in actual vs. expected:", len(diffs))
-	for _, diff := range diffs {
-		t.Log(diff)
 	}
 }

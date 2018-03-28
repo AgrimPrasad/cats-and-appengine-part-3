@@ -14,10 +14,10 @@ import (
 
 func (s *service) addCat(ctx context.Context, r interface{}) (interface{}, error) {
 	// make type conversion to the expected Cat pointer
-	cat := r.(*Cat)
+	req := r.(*PostAddFormatRequest)
 
 	// hit the injected DB layer
-	err := s.db.AddCat(ctx, cat)
+	err := s.db.AddCat(ctx, req.Cat)
 	if err != nil {
 		log.Errorf(ctx, "unable to get count: %s", err)
 		return nil, marvin.NewProtoStatusResponse(&ErrorResponse{
@@ -25,7 +25,7 @@ func (s *service) addCat(ctx context.Context, r interface{}) (interface{}, error
 	}
 
 	// wrap respones so we can return with a 201 code
-	return marvin.NewProtoStatusResponse(cat, http.StatusCreated), nil
+	return marvin.NewProtoStatusResponse(req.Cat, http.StatusCreated), nil
 }
 
 func decodeCat(ctx context.Context, r *http.Request) (interface{}, error) {
@@ -35,7 +35,7 @@ func decodeCat(ctx context.Context, r *http.Request) (interface{}, error) {
 		return nil, marvin.NewJSONStatusResponse(&ErrorResponse{
 			Error: "bad request"}, http.StatusBadRequest)
 	}
-	return &cat, nil
+	return &PostAddFormatRequest{Cat: &cat}, nil
 }
 
 func decodeCatProto(ctx context.Context, r *http.Request) (interface{}, error) {
@@ -51,5 +51,5 @@ func decodeCatProto(ctx context.Context, r *http.Request) (interface{}, error) {
 		return nil, marvin.NewProtoStatusResponse(&ErrorResponse{
 			Error: "bad request"}, http.StatusBadRequest)
 	}
-	return &cat, nil
+	return &PostAddFormatRequest{Cat: &cat}, nil
 }

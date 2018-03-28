@@ -24,7 +24,7 @@ func (s *service) addCat(ctx context.Context, r interface{}) (interface{}, error
 			Error: "server error"}, http.StatusInternalServerError)
 	}
 
-	// wrap respones so we can return with a 201 code
+	// wrap responses so we can return with a 201 code
 	return marvin.NewProtoStatusResponse(req.Cat, http.StatusCreated), nil
 }
 

@@ -11,8 +11,7 @@
   name = "github.com/NYTimes/marvin"
   packages = [
     ".",
-    "internal",
-    "marvintest"
+    "internal"
   ]
   revision = "20b9358a0d961c1a08599324f96c2aec4fc12f23"
   version = "v0.2.0"
@@ -145,6 +144,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "09ce24930a7c1b9d0bd9a21563416091df9c52910a19c5bf44d9cc70c7d2a33f"
+  inputs-digest = "a32e4e13a42cf9ccd0eec60dade032433a89abf8d7d7f2f030314ab93b11f65b"
   solver-name = "gps-cdcl"
   solver-version = 1

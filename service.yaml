@@ -89,7 +89,7 @@ definitions:
         items:
           $ref: '#/definitions/Cat'
         x-proto-tag: 2
-      idCats:
+      catsMap:
         type: object
         additionalProperties:
           $ref: '#/definitions/Cat'

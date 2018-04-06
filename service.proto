@@ -23,6 +23,7 @@ message Cat {
 
 message CatsResponse {
     repeated Cat cats = 2;
+    map<string, Cat> idCats = 3;
     int32 total = 1;
 }
 

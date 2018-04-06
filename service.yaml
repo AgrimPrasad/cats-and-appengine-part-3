@@ -89,6 +89,11 @@ definitions:
         items:
           $ref: '#/definitions/Cat'
         x-proto-tag: 2
+      idCats:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/Cat'
+        x-proto-tag: 3
 
   ErrorResponse:
     type: object
